@@ -1,0 +1,20 @@
+{
+  "name": "api-mock-server",
+  "version": "1.0.0",
+  "description": "A simple API mock server for development and testing",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": ["api", "mock", "server", "testing", "development"],
+  "author": "seraphinaeth",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
