@@ -1,38 +1,48 @@
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const configPath = path.join(__dirname, 'config.json');
+let config;
 
-app.use(cors());
+try {
+  const configData = fs.readFileSync(configPath, 'utf8');
+  config = JSON.parse(configData);
+} catch (error) {
+  console.error('Error loading config:', error);
+  process.exit(1);
+}
+
+const PORT = process.env.PORT || config.server.port;
+
+if (config.server.cors) {
+  app.use(cors());
+}
 app.use(express.json());
 
 app.get('/', (req, res) => {
+  const endpoints = {};
+  config.endpoints.forEach(endpoint => {
+    endpoints[endpoint.path] = `${endpoint.method} - Mock endpoint`;
+  });
+  
   res.json({
     message: 'API Mock Server is running!',
     version: '1.0.0',
-    endpoints: {
-      '/api/users': 'GET - Get sample users',
-      '/api/posts': 'GET - Get sample posts'
-    }
+    endpoints
   });
 });
 
-app.get('/api/users', (req, res) => {
-  res.json([
-    { id: 1, name: 'John Doe', email: 'john@example.com' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
-    { id: 3, name: 'Bob Johnson', email: 'bob@example.com' }
-  ]);
-});
-
-app.get('/api/posts', (req, res) => {
-  res.json([
-    { id: 1, title: 'Hello World', content: 'First post content', userId: 1 },
-    { id: 2, title: 'Second Post', content: 'Another post here', userId: 2 }
-  ]);
+config.endpoints.forEach(endpoint => {
+  const method = endpoint.method.toLowerCase();
+  app[method](endpoint.path, (req, res) => {
+    res.status(endpoint.response.status).json(endpoint.response.data);
+  });
 });
 
 app.listen(PORT, () => {
   console.log(`Mock API server running on port ${PORT}`);
+  console.log(`Loaded ${config.endpoints.length} endpoints from config`);
 });
