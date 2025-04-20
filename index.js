@@ -44,7 +44,11 @@ app.get('/', (req, res) => {
 config.endpoints.forEach(endpoint => {
   const method = endpoint.method.toLowerCase();
   app[method](endpoint.path, (req, res) => {
-    res.status(endpoint.response.status).json(endpoint.response.data);
+    const delay = endpoint.delay || config.server.delay || 0;
+    
+    setTimeout(() => {
+      res.status(endpoint.response.status).json(endpoint.response.data);
+    }, delay);
   });
 });
 
