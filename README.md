@@ -35,7 +35,31 @@ The server runs on port 3000 by default.
 
 - `GET /` - Server info and endpoint list
 - `GET /api/users` - Sample users data
-- `GET /api/posts` - Sample posts data
+- `GET /api/posts` - Sample posts data (with 500ms delay)
+- `POST /api/users` - Create new user
+
+## Configuration
+
+The server is configured via `config.json`. You can:
+
+- Set custom port and CORS settings
+- Add request logging
+- Configure global or per-endpoint delays
+- Define custom endpoints with different HTTP methods
+
+## Examples
+
+Check the `examples/` folder for sample configurations:
+
+- `ecommerce.json` - E-commerce API mockup
+- `social.json` - Social media API mockup
+
+To use an example:
+
+```bash
+cp examples/ecommerce.json config.json
+npm start
+```
 
 ## License
 
