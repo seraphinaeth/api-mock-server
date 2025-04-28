@@ -52,6 +52,22 @@ config.endpoints.forEach(endpoint => {
   });
 });
 
+app.use((req, res) => {
+  res.status(404).json({
+    error: 'Endpoint not found',
+    path: req.path,
+    method: req.method
+  });
+});
+
+app.use((err, req, res, next) => {
+  console.error('Error:', err.message);
+  res.status(500).json({
+    error: 'Internal server error',
+    message: err.message
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Mock API server running on port ${PORT}`);
   console.log(`Loaded ${config.endpoints.length} endpoints from config`);
