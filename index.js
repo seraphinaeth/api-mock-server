@@ -41,6 +41,14 @@ app.get('/', (req, res) => {
   });
 });
 
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 config.endpoints.forEach(endpoint => {
   const method = endpoint.method.toLowerCase();
   app[method](endpoint.path, (req, res) => {
